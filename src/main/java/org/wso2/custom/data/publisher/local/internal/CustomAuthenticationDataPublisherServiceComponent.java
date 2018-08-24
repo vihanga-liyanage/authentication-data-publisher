@@ -43,8 +43,8 @@ public class CustomAuthenticationDataPublisherServiceComponent {
 
     protected void activate(ComponentContext ctxt) {
         try {
-            CustomSessionDataPublisherImpl basicCustomAuth = new CustomSessionDataPublisherImpl();
-            ctxt.getBundleContext().registerService(AuthenticationDataPublisher.class.getName(), basicCustomAuth, null);
+            CustomSessionDataPublisherImpl dataPublisher = new CustomSessionDataPublisherImpl();
+            ctxt.getBundleContext().registerService(AuthenticationDataPublisher.class.getName(), dataPublisher, null);
 
             log.info("================ CustomSessionDataPublisherImpl bundle is activated");
         } catch (Throwable e) {
