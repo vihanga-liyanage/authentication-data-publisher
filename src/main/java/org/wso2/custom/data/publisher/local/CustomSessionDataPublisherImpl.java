@@ -21,17 +21,24 @@ package org.wso2.custom.data.publisher.local;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.application.authentication.framework.context.AuthenticationContext;
+import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.data.publisher.application.authentication.AbstractAuthenticationDataPublisher;
 import org.wso2.carbon.identity.data.publisher.application.authentication.AuthPublisherConstants;
 import org.wso2.carbon.identity.data.publisher.application.authentication.model.AuthenticationData;
 import org.wso2.carbon.identity.data.publisher.application.authentication.model.SessionData;
 
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 public class CustomSessionDataPublisherImpl extends AbstractAuthenticationDataPublisher {
 
-    public static final Log LOG = LogFactory.getLog(CustomSessionDataPublisherImpl.class);
+    public static final Log log = LogFactory.getLog(CustomSessionDataPublisherImpl.class);
+    private static final String SESSION_DATA_PERSIST_QUERY = "INSERT INTO IDN_CUSTOM_SESSION_DATA (`USER`, " +
+            "`SESSION_ID`, `CREATED_TIMESTAMP`, `ACTION`, `SERVICE_PROVIDER`) VALUES (?, ?, ?, ?, ?)";
 
     @Override
     public void publishAuthenticationStepSuccess(HttpServletRequest request, AuthenticationContext context,
@@ -79,24 +86,24 @@ public class CustomSessionDataPublisherImpl extends AbstractAuthenticationDataPu
 
     @Override
     public void doPublishSessionCreation(SessionData sessionData) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Publishing session creation to DAS");
+        if (log.isDebugEnabled()) {
+            log.debug("Publishing session creation to DAS");
         }
         publishSessionData(sessionData, AuthPublisherConstants.SESSION_CREATION_STATUS);
     }
 
     @Override
     public void doPublishSessionTermination(SessionData sessionData) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Publishing session termination to DAS");
+        if (log.isDebugEnabled()) {
+            log.debug("Publishing session termination to DAS");
         }
         publishSessionData(sessionData, AuthPublisherConstants.SESSION_TERMINATION_STATUS);
     }
 
     @Override
     public void doPublishSessionUpdate(SessionData sessionData) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Publishing session update to DAS");
+        if (log.isDebugEnabled()) {
+            log.debug("Publishing session update to DAS");
         }
         publishSessionData(sessionData, AuthPublisherConstants.SESSION_UPDATE_STATUS);
     }
@@ -108,15 +115,36 @@ public class CustomSessionDataPublisherImpl extends AbstractAuthenticationDataPu
 
     protected void publishSessionData(SessionData sessionData, int actionId) {
 
-        String action = "";
-        switch (actionId) {
-            case 0: action = "Terminated"; break;
-            case 1: action = "Created"; break;
-            case 2: action = "Updated"; break;
-        }
         if (sessionData != null) {
-            LOG.info("New session data record: [Action: " + action + ", User: " + sessionData.getUser() +
+
+            String action = "";
+            switch (actionId) {
+                case 0: action = "Terminated"; break;
+                case 1: action = "Created"; break;
+                case 2: action = "Updated"; break;
+            }
+
+            log.info("Persisting session data record: [Action: " + action + ", User: " + sessionData.getUser() +
                     ", Session ID: " + sessionData.getSessionId());
+
+            PreparedStatement prepStmt = null;
+            Connection connection = null;
+            try {
+                connection = IdentityDatabaseUtil.getDBConnection();
+                prepStmt = connection.prepareStatement(SESSION_DATA_PERSIST_QUERY);
+                prepStmt.setString(1, sessionData.getUser());
+                prepStmt.setString(2, sessionData.getSessionId());
+                prepStmt.setDate(3, new Date(sessionData.getCreatedTimestamp()));
+                prepStmt.setString(4, action);
+                prepStmt.setString(5, sessionData.getServiceProvider());
+                prepStmt.execute();
+                connection.commit();
+            } catch (SQLException e) {
+                log.error("Error while persisting custom user session information.", e);
+            } finally {
+                IdentityDatabaseUtil.closeStatement(prepStmt);
+                IdentityDatabaseUtil.closeConnection(connection);
+            }
         }
     }
 }

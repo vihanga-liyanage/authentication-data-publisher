@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-SymbolicName: org.wso2.custom.data.publisher.local
 Built-By: vihanga
 Bundle-ManifestVersion: 2
-Bnd-LastModified: 1535115966342
+Bnd-LastModified: 1535301775662
 Import-Package: javax.servlet;version="[2.6,3)",javax.servlet.http;ver
  sion="[2.6,3)",org.apache.commons.logging;version="[1.2,2.0)",org.osg
  i.framework;version="[1.7,2)";resolution:=optional,org.osgi.service.c
@@ -10,20 +10,22 @@ Import-Package: javax.servlet;version="[2.6,3)",javax.servlet.http;ver
  ity.application.authentication.framework;version="[5.5,6)";resolution
  :=optional,org.wso2.carbon.identity.application.authentication.framew
  ork.context;version="[5.5,6)";resolution:=optional,org.wso2.carbon.id
- entity.data.publisher.application.authentication;version="[5.1,6)";re
- solution:=optional,org.wso2.carbon.identity.data.publisher.applicatio
- n.authentication.model;version="[5.1,6)";resolution:=optional,org.wso
- 2.carbon.user.core.service;version="[4.4,5)";resolution:=optional,org
- .wso2.custom.data.publisher.local;version="[1.0,2)";resolution:=optio
- nal
+ entity.core.util;version="[5.7,6)";resolution:=optional,org.wso2.carb
+ on.identity.data.publisher.application.authentication;version="[5.1,6
+ )";resolution:=optional,org.wso2.carbon.identity.data.publisher.appli
+ cation.authentication.model;version="[5.1,6)";resolution:=optional,or
+ g.wso2.carbon.user.core.service;version="[4.4,5)";resolution:=optiona
+ l,org.wso2.custom.data.publisher.local;version="[1.0,2)";resolution:=
+ optional
 Service-Component: OSGI-INF/serviceComponents.xml
 Axis2Module: org.wso2.custom.data.publisher.local-1.0.0
 Tool: Bnd-1.43.0
 Export-Package: org.wso2.custom.data.publisher.local;uses:="org.wso2.c
  arbon.identity.application.authentication.framework.context,javax.ser
- vlet.http,org.apache.commons.logging,org.wso2.carbon.identity.data.pu
- blisher.application.authentication.model,org.wso2.carbon.identity.dat
- a.publisher.application.authentication";version="1.0.0"
+ vlet.http,org.apache.commons.logging,org.wso2.carbon.identity.core.ut
+ il,org.wso2.carbon.identity.data.publisher.application.authentication
+ .model,org.wso2.carbon.identity.data.publisher.application.authentica
+ tion";version="1.0.0"
 Bundle-Version: 1.0.0
 Bundle-Name: org.wso2.custom.data.publisher.local
 Created-By: Apache Maven Bundle Plugin
