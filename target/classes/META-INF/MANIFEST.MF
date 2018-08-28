@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-SymbolicName: org.wso2.custom.data.publisher.local
 Built-By: vihanga
 Bundle-ManifestVersion: 2
-Bnd-LastModified: 1535301775662
+Bnd-LastModified: 1535472538708
 Import-Package: javax.servlet;version="[2.6,3)",javax.servlet.http;ver
  sion="[2.6,3)",org.apache.commons.logging;version="[1.2,2.0)",org.osg
  i.framework;version="[1.7,2)";resolution:=optional,org.osgi.service.c
